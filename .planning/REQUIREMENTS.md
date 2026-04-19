@@ -18,7 +18,7 @@
 
 ### Catalog (CAT)
 
-- [ ] **CAT-01**: App seeds 10–20 shoe products on startup (running, hiking, slides, sandals, socks) with name, description, unit price, inventory, category
+- [x] **CAT-01**: App seeds 10–20 shoe products on startup (running, hiking, slides, sandals, socks) with name, description, unit price, inventory, category
 - [ ] **CAT-02**: User can search for products by keyword via web UI and chatbot
 - [ ] **CAT-03**: User can view product detail page (web) or ask for details (chat)
 - [x] **CAT-04**: Products support size/color variants
@@ -59,8 +59,8 @@
 
 ### Seed Data (SEED)
 
-- [ ] **SEED-01**: App seeds at least 2 test users on startup
-- [ ] **SEED-02**: App seeds at least 1 prior paid order, 1 shipped order, and 1 canceled order for test users
+- [x] **SEED-01**: App seeds at least 2 test users on startup
+- [x] **SEED-02**: App seeds at least 1 prior paid order, 1 shipped order, and 1 canceled order for test users
 
 ### Evaluation & Testing (TEST)
 
@@ -100,13 +100,14 @@
 | REQ-ID | Phase |
 |--------|-------|
 | AUTH-01 – AUTH-04 | TBD |
-| CAT-01 – CAT-04 | TBD |
+| CAT-01, CAT-04 | Phase 1 ✓ |
+| CAT-02 – CAT-03 | TBD |
 | CART-01 – CART-04 | TBD |
 | CHK-01 – CHK-04 | TBD |
 | ORD-01 – ORD-03 | TBD |
 | CHAT-01 – CHAT-05 | TBD |
 | MOCK-01 – MOCK-03 | TBD |
-| SEED-01 – SEED-02 | TBD |
+| SEED-01 – SEED-02 | Phase 1 ✓ |
 | TEST-01 – TEST-04 | TBD |
 
 *Traceability updated by roadmapper.*

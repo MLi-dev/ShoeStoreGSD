@@ -9,7 +9,7 @@
 
 ## Phases
 
-- [ ] **Phase 1: Domain Foundation** - Scaffold the project, define all domain models, wire in-memory stores, and seed reference data — no HTTP, no LLM
+- [x] **Phase 1: Domain Foundation** - Scaffold the project, define all domain models, wire in-memory stores, and seed reference data — no HTTP, no LLM
 - [ ] **Phase 2: Auth & Core Services** - Shared JWT auth layer plus cart and order service logic verified by unit tests
 - [ ] **Phase 3: Web UI & REST API** - Mock adapters with failure injection, REST routers, and all Jinja2 web pages deliver the complete web shopping experience
 - [ ] **Phase 4: Claude Agent** - Tool registry, agentic loop, guardrails, and chat endpoint make every shopping and support flow available conversationally
@@ -33,8 +33,8 @@
 Plans:
 - [x] 01-01-PLAN.md — Project scaffold: pyproject.toml (uv), main.py FastAPI skeleton, config.py, app/ and tests/ directory trees with __init__.py markers
 - [x] 01-02-PLAN.md — Domain models and in-memory stores: User, Product, Variant, Cart, CartItem, Order, OrderItem dataclasses + users_db/products_db/carts_db/orders_db + unit tests for models and stores
-- [ ] 01-03-PLAN.md — Seed data and lifespan wiring: seed.py with 2 bcrypt-hashed users, 15 products (3 per category), 3 prior orders; main.py lifespan calls seed(); test_seed.py covers CAT-01, CAT-04, SEED-01, SEED-02
-- [ ] 01-04-PLAN.md — Phase 1 gate: pre-flight checks (full pytest suite, ruff), human-verify uvicorn startup, and phase summary for /gsd-verify-work
+- [x] 01-03-PLAN.md — Seed data and lifespan wiring: seed.py with 2 bcrypt-hashed users, 15 products (3 per category), 3 prior orders; main.py lifespan calls seed(); test_seed.py covers CAT-01, CAT-04, SEED-01, SEED-02
+- [x] 01-04-PLAN.md — Phase 1 gate: pre-flight checks (full pytest suite, ruff), human-verify uvicorn startup, and phase summary for /gsd-verify-work
 
 ### Phase 2: Auth & Core Services
 **Goal**: Users can register, log in, and use a JWT that both the web UI and chat endpoint will recognize; cart and order service logic is fully exercised by unit tests
@@ -93,7 +93,7 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Domain Foundation | 2/4 | In progress | - |
+| 1. Domain Foundation | 4/4 | Complete | 2026-04-19 |
 | 2. Auth & Core Services | 0/? | Not started | - |
 | 3. Web UI & REST API | 0/? | Not started | - |
 | 4. Claude Agent | 0/? | Not started | - |
