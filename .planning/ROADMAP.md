@@ -46,7 +46,12 @@ Plans:
   3. A user can initiate a password reset flow and set a new password
   4. A unit test can add a product variant to a cart, update its quantity, remove it, and verify the cart total — no HTTP required
   5. The cart rejects adding a product that has zero inventory
-**Plans**: TBD
+**Plans**: 3 plans
+
+Plans:
+- [x] 02-01-PLAN.md — JWT config constants + auth store extension (reset_tokens_db) + auth_service.py (register, login, verify_token, reset_request, reset_confirm)
+- [ ] 02-02-PLAN.md — cart_service.py (add/update/remove/total/clear with asyncio.Lock) + order_service.py (place/cancel/return/get/list with ownership enforcement)
+- [ ] 02-03-PLAN.md — Unit tests: test_auth_service.py, test_cart_service.py, test_order_service.py covering all D-14 scenarios with D-15 store isolation
 
 ### Phase 3: Web UI & REST API
 **Goal**: A browser user can complete the full purchase lifecycle — browse, search, add to cart, check out, and manage orders — and mock adapters make failure scenarios injectable for demos
@@ -94,11 +99,11 @@ Plans:
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Domain Foundation | 4/4 | Complete | 2026-04-19 |
-| 2. Auth & Core Services | 0/? | Not started | - |
+| 2. Auth & Core Services | 1/3 | In Progress | - |
 | 3. Web UI & REST API | 0/? | Not started | - |
 | 4. Claude Agent | 0/? | Not started | - |
 | 5. Evals & Demo Control | 0/? | Not started | - |
 
 ---
 
-*Last updated: 2026-04-18 by roadmapper*
+*Last updated: 2026-04-19 by planner*
