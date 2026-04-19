@@ -32,7 +32,7 @@ progress:
 | Field | Value |
 |-------|-------|
 | Phase | 2 — Auth & Core Services |
-| Plan | 02-01 complete (1 of 3) |
+| Plan | 02-02 complete (2 of 3) |
 | Status | Phase 2 In Progress |
 | Mode | yolo |
 
@@ -40,7 +40,7 @@ progress:
 
 ```
 Phase 1 [##########] 100% ✓ Complete
-Phase 2 [###       ] 33% (1/3 plans)
+Phase 2 [######    ] 67% (2/3 plans)
 Phase 3 [          ] 0%
 Phase 4 [          ] 0%
 Phase 5 [          ] 0%
@@ -55,7 +55,7 @@ Phase 5 [          ] 0%
 | Metric | Value |
 |--------|-------|
 | Phases complete | 1 / 5 |
-| Requirements delivered | 8 / 33 |
+| Requirements delivered | 12 / 33 |
 | Plans executed | 5 |
 | Phases with issues | 0 |
 
@@ -124,9 +124,9 @@ Phase 5 [          ] 0%
 
 ## Session Continuity
 
-**Last session:** 2026-04-19T16:57:05Z
-**Stopped at:** Phase 2 Plan 01 complete — JWT config, auth store, auth_service.py implemented and tested
-**Next action:** Execute 02-02-PLAN.md (cart_service.py + order_service.py)
+**Last session:** 2026-04-19T17:06:15Z
+**Stopped at:** Phase 2 Plan 02 complete — cart_service.py + order_service.py implemented and tested (42 TDD tests)
+**Next action:** Execute 02-03-PLAN.md (unit tests gate: test_auth_service.py, test_cart_service.py, test_order_service.py)
 
 ---
 

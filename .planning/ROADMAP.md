@@ -50,7 +50,7 @@ Plans:
 
 Plans:
 - [x] 02-01-PLAN.md — JWT config constants + auth store extension (reset_tokens_db) + auth_service.py (register, login, verify_token, reset_request, reset_confirm)
-- [ ] 02-02-PLAN.md — cart_service.py (add/update/remove/total/clear with asyncio.Lock) + order_service.py (place/cancel/return/get/list with ownership enforcement)
+- [x] 02-02-PLAN.md — cart_service.py (add/update/remove/total/clear with asyncio.Lock) + order_service.py (place/cancel/return/get/list with ownership enforcement)
 - [ ] 02-03-PLAN.md — Unit tests: test_auth_service.py, test_cart_service.py, test_order_service.py covering all D-14 scenarios with D-15 store isolation
 
 ### Phase 3: Web UI & REST API
@@ -99,7 +99,7 @@ Plans:
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Domain Foundation | 4/4 | Complete | 2026-04-19 |
-| 2. Auth & Core Services | 1/3 | In Progress | - |
+| 2. Auth & Core Services | 2/3 | In Progress | - |
 | 3. Web UI & REST API | 0/? | Not started | - |
 | 4. Claude Agent | 0/? | Not started | - |
 | 5. Evals & Demo Control | 0/? | Not started | - |
