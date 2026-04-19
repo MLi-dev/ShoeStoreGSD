@@ -9,7 +9,7 @@ dependencies = [
     "pydantic>=2.13.2",
     "pydantic-settings>=2.13.1",
     "passlib>=1.7.4",
-    "bcrypt>=5.0.0",
+    "bcrypt<5",
     "itsdangerous>=2.2.0",
 ]
 
