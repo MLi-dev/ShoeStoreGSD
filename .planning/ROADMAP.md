@@ -102,7 +102,12 @@ Plans:
   3. A negative eval dataset exists with cases for out-of-stock, payment failure, wrong user, and bad order ID scenarios
   4. An adversarial eval dataset exists with cases for prompt injection, off-topic requests, typos, sarcasm, and all-caps input
   5. All eval datasets can be loaded and a smoke-run of at least one case per dataset completes without an uncaught exception
-**Plans**: TBD
+**Plans**: 3 plans
+
+Plans:
+- [ ] 05-01-PLAN.md — Root instruction parser: app/lib/guardrails/root_instruction.py (pure function, 5 regex patterns) + chat_router.py stub replaced with real parse+apply flow (MOCK-03)
+- [ ] 05-02-PLAN.md — Eval datasets: app/lib/evals/datasets/ subpackage with positive.py, negative.py, adversarial.py — 5 cases each in {input, expected_trajectory, expected_output, tags} format (TEST-01, TEST-02, TEST-03, TEST-04)
+- [ ] 05-03-PLAN.md — Smoke runner: tests/evals/test_smoke.py — 3 async tests (one per dataset), real API calls, skips when ANTHROPIC_API_KEY absent (TEST-04)
 
 ---
 
@@ -114,7 +119,7 @@ Plans:
 | 2. Auth & Core Services | 3/3 | Complete | 2026-04-19 |
 | 3. Web UI & REST API | 6/6 | Complete | 2026-04-19 |
 | 4. Claude Agent | 4/4 | Complete | 2026-04-19 |
-| 5. Evals & Demo Control | 0/? | Not started | - |
+| 5. Evals & Demo Control | 0/3 | Not started | - |
 
 ---
 
