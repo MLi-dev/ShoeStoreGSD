@@ -18,3 +18,8 @@ FAILURE_CONFIG: dict[str, dict[str, float]] = {
 # DEMO_MODE gates the [root]: instruction token parser (Phase 4+).
 # When False, root tokens are ignored and treated as plain user input.
 DEMO_MODE: bool = True
+
+# JWT settings — used by app/lib/auth/auth_service.py
+JWT_SECRET: str = "dev-secret-change-in-prod"
+JWT_ALGORITHM: str = "HS256"
+JWT_EXPIRE_MINUTES: int = 30
