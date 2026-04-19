@@ -12,7 +12,9 @@ A working end-to-end loop where a user can discover a shoe, buy it, and resolve 
 
 ### Validated
 
-(None yet — ship to validate)
+- [x] App seeds 10–20 shoe products on startup with name, description, price, inventory, and size/color variants — Validated in Phase 1: Domain Foundation
+- [x] App seeds at least 2 test users and 3 prior orders (paid, shipped, canceled) — Validated in Phase 1: Domain Foundation
+- [x] Domain models (User, Product, Variant, Cart, CartItem, Order, OrderItem) can be created, stored, and retrieved without an HTTP server — Validated in Phase 1: Domain Foundation
 
 ### Active
 
@@ -86,4 +88,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-18 after initialization*
+*Last updated: 2026-04-19 — Phase 1 complete*
