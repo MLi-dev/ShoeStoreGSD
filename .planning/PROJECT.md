@@ -15,16 +15,17 @@ A working end-to-end loop where a user can discover a shoe, buy it, and resolve 
 - [x] App seeds 10–20 shoe products on startup with name, description, price, inventory, and size/color variants — Validated in Phase 1: Domain Foundation
 - [x] App seeds at least 2 test users and 3 prior orders (paid, shipped, canceled) — Validated in Phase 1: Domain Foundation
 - [x] Domain models (User, Product, Variant, Cart, CartItem, Order, OrderItem) can be created, stored, and retrieved without an HTTP server — Validated in Phase 1: Domain Foundation
+- [x] User can sign up, log in, and reset their password via shared FastAPI auth (web + chat) — Validated in Phase 2: Auth & Core Services
+- [x] User can browse, search, and view details for seeded shoe products — Validated in Phase 3: Web UI & REST API
+- [x] User can add items to cart, update quantities, and remove items — Validated in Phase 3: Web UI & REST API
+- [x] User can check out and place an order (Credit Card, PayPal, Apple Pay) — Validated in Phase 3: Web UI & REST API
+- [x] User can check order status, cancel, or return an order via web UI — Validated in Phase 3: Web UI & REST API
+- [x] Chatbot (Claude via Anthropic SDK) can handle all shopping and support flows conversationally — Validated in Phase 4: Claude Agent
+- [x] Warehouse and payment mock adapters have configurable global failure injection — Validated in Phase 3: Web UI & REST API
 
 ### Active
 
-- [ ] User can sign up, log in, and reset their password via shared FastAPI auth (web + chat)
-- [ ] User can browse, search, and view details for seeded shoe products
-- [ ] User can add items to cart, update quantities, and remove items
-- [ ] User can check out and place an order (Credit Card, PayPal, Apple Pay)
-- [ ] User can check order status, cancel, or return an order via web UI
-- [ ] Chatbot (Claude via Anthropic SDK) can handle all shopping and support flows conversationally
-- [ ] Warehouse and payment mock adapters have configurable global failure injection
+- [ ] `[root]:` instruction token updates live failure config for current run only
 - [ ] `[root]:` instruction token updates live failure config for current run only
 - [ ] Langfuse traces capture agent/tool/generation activity
 - [ ] Eval datasets exist for positive, negative, and adversarial cases
@@ -88,4 +89,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-19 — Phase 1 complete*
+*Last updated: 2026-04-19 — Phase 4 complete*
