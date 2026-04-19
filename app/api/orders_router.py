@@ -15,7 +15,7 @@ router = APIRouter(tags=["orders"])
 templates = Jinja2Templates(directory="app/web/templates")
 
 # Statuses where a refund should run on cancel
-_REFUND_ON_CANCEL_STATUSES = ("paid", "captured")
+_REFUND_ON_CANCEL_STATUSES = ("paid",)
 
 
 def _status_badge(status: str) -> str:

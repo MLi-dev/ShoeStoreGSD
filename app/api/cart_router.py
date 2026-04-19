@@ -147,6 +147,8 @@ async def checkout_post(
         amount=total,
     )
     if not charge_result["success"]:
+        # Release the warehouse reservation before returning the error (CR-01)
+        warehouse_mock.cancel_order(order_id=temp_id)
         return templates.TemplateResponse(
             request=request,
             name="cart/cart.html",
