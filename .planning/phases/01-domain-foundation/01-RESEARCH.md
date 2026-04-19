@@ -624,7 +624,7 @@ def test_passwords_are_hashed():
 
 ---
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **`pythonpath` in pytest config needed?**
    - What we know: uv with `package = false` should add project root to sys.path; standard Python packaging guidance also says project root is on path for non-installed apps
