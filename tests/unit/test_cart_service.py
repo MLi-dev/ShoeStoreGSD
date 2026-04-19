@@ -1,7 +1,5 @@
 # tests/unit/test_cart_service.py
 # TDD RED phase: failing tests for cart_service.py
-import asyncio
-
 import pytest
 
 from app.lib.cart.models import Cart, CartItem
@@ -248,3 +246,99 @@ def test_clear_cart_removes_items():
     result = clear_cart("user-1")
     assert result["success"] is True
     assert "user-1" not in carts_db or carts_db["user-1"].items == []
+
+
+# ---------------------------------------------------------------------------
+# Required named aliases (plan 02-03 acceptance criteria)
+# ---------------------------------------------------------------------------
+
+
+def _seed_product(product_id: str = "p1", inventory: int = 5, price: float = 99.0):
+    p = Product(
+        id=product_id,
+        name="Test Shoe",
+        description="",
+        unit_price=price,
+        inventory=inventory,
+        category="running",
+    )
+    products_db[product_id] = p
+    return p
+
+
+@pytest.mark.asyncio
+async def test_add_item_success():
+    from app.lib.cart.cart_service import add_item
+
+    _seed_product("p1", inventory=5, price=99.0)
+    result = await add_item("u1", "p1", 2)
+    assert result["success"] is True
+    assert result["data"]["cart"]["items"][0]["product_id"] == "p1"
+    assert result["data"]["cart"]["items"][0]["quantity"] == 2
+
+
+@pytest.mark.asyncio
+async def test_add_item_zero_inventory_rejected():
+    from app.lib.cart.cart_service import add_item
+
+    _seed_product("p1", inventory=0)
+    result = await add_item("u1", "p1", 1)
+    assert result["success"] is False
+    assert result["code"] == "OUT_OF_STOCK"
+
+
+@pytest.mark.asyncio
+async def test_add_item_merge_same_product():
+    from app.lib.cart.cart_service import add_item
+
+    _seed_product("p1", inventory=10)
+    await add_item("u1", "p1", 2)
+    result = await add_item("u1", "p1", 3)
+    cart_data = result["data"]["cart"]
+    assert len(cart_data["items"]) == 1
+    assert cart_data["items"][0]["quantity"] == 5
+
+
+@pytest.mark.asyncio
+async def test_cart_total():
+    from app.lib.cart.cart_service import add_item, get_cart_total
+
+    _seed_product("p1", inventory=10, price=50.0)
+    _seed_product("p2", inventory=10, price=30.0)
+    await add_item("u1", "p1", 2)
+    await add_item("u1", "p2", 3)
+    result = get_cart_total("u1")
+    assert result["success"] is True
+    assert result["data"]["total"] == 190.0  # 2*50 + 3*30
+
+
+@pytest.mark.asyncio
+async def test_update_quantity():
+    from app.lib.cart.cart_service import add_item, update_quantity
+
+    _seed_product("p1", inventory=10)
+    await add_item("u1", "p1", 2)
+    result = await update_quantity("u1", "p1", 5)
+    assert result["success"] is True
+    item = result["data"]["cart"]["items"][0]
+    assert item["quantity"] == 5
+
+
+@pytest.mark.asyncio
+async def test_remove_item():
+    from app.lib.cart.cart_service import add_item, remove_item
+
+    _seed_product("p1", inventory=5)
+    await add_item("u1", "p1", 1)
+    result = remove_item("u1", "p1")
+    assert result["success"] is True
+    assert result["data"]["cart"]["items"] == []
+
+
+def test_get_cart_empty():
+    from app.lib.cart.cart_service import get_cart
+
+    result = get_cart("u1")
+    assert result["success"] is True
+    assert result["data"]["cart"]["items"] == []
+    assert result["data"]["cart"]["total"] == 0.0

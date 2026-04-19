@@ -291,3 +291,145 @@ def test_list_orders_filters_by_user():
     assert result["success"] is True
     ids = {o["id"] for o in result["data"]["orders"]}
     assert ids == {"ord-1", "ord-3"}
+
+
+# ---------------------------------------------------------------------------
+# Required named aliases (plan 02-03 acceptance criteria)
+# ---------------------------------------------------------------------------
+
+
+def _seed_cart(
+    user_id: str = "u1",
+    product_id: str = "p1",
+    quantity: int = 1,
+    price: float = 99.0,
+):
+    carts_db[user_id] = Cart(
+        user_id=user_id,
+        items=[CartItem(product_id=product_id, quantity=quantity, unit_price=price)],
+    )
+
+
+def _seed_order(
+    order_id=None,
+    user_id: str = "u1",
+    order_status: str = "placed",
+    payment_status: str = "pending",
+):
+    from datetime import datetime, timezone
+    from uuid import uuid4
+
+    oid = order_id or str(uuid4())
+    now = datetime.now(timezone.utc).isoformat()
+    from app.lib.orders.models import OrderItem
+    o = Order(
+        id=oid,
+        user_id=user_id,
+        items=[OrderItem(product_id="p1", quantity=1, unit_price=99.0)],
+        total_amount=99.0,
+        payment_method="credit_card",
+        payment_status=payment_status,
+        order_status=order_status,
+        created_at=now,
+        updated_at=now,
+    )
+    orders_db[oid] = o
+    return o
+
+
+def test_place_order():
+    from app.lib.orders.order_service import place_order
+
+    _seed_cart("u1")
+    result = place_order("u1", "credit_card")
+    assert result["success"] is True
+    assert "order_id" in result["data"]
+    assert result["data"]["order_status"] == "placed"
+    assert "u1" not in carts_db
+
+
+def test_cancel_order_eligible_placed():
+    from app.lib.orders.order_service import cancel_order
+
+    order = _seed_order(user_id="u1", order_status="placed")
+    result = cancel_order(order.id, "u1")
+    assert result["success"] is True
+    assert orders_db[order.id].order_status == "canceled"
+
+
+def test_cancel_order_eligible_paid():
+    from app.lib.orders.order_service import cancel_order
+
+    order = _seed_order(user_id="u1", order_status="paid")
+    result = cancel_order(order.id, "u1")
+    assert result["success"] is True
+
+
+def test_cancel_order_ineligible_processing():
+    from app.lib.orders.order_service import cancel_order
+
+    order = _seed_order(user_id="u1", order_status="processing")
+    result = cancel_order(order.id, "u1")
+    assert result["success"] is False
+    assert result["code"] == "CANCEL_NOT_ALLOWED"
+
+
+def test_cancel_order_ineligible_shipped():
+    from app.lib.orders.order_service import cancel_order
+
+    order = _seed_order(user_id="u1", order_status="shipped")
+    result = cancel_order(order.id, "u1")
+    assert result["success"] is False
+    assert result["code"] == "CANCEL_NOT_ALLOWED"
+
+
+def test_return_order_eligible_paid():
+    from app.lib.orders.order_service import request_return
+
+    order = _seed_order(user_id="u1", order_status="paid")
+    result = request_return(order.id, "u1")
+    assert result["success"] is True
+    assert orders_db[order.id].order_status == "returned"
+
+
+def test_return_order_eligible_processing():
+    from app.lib.orders.order_service import request_return
+
+    order = _seed_order(user_id="u1", order_status="processing")
+    result = request_return(order.id, "u1")
+    assert result["success"] is True
+
+
+def test_return_order_eligible_shipped():
+    from app.lib.orders.order_service import request_return
+
+    order = _seed_order(user_id="u1", order_status="shipped")
+    result = request_return(order.id, "u1")
+    assert result["success"] is True
+
+
+def test_return_order_ineligible_placed():
+    from app.lib.orders.order_service import request_return
+
+    order = _seed_order(user_id="u1", order_status="placed")
+    result = request_return(order.id, "u1")
+    assert result["success"] is False
+    assert result["code"] == "RETURN_NOT_ALLOWED"
+
+
+def test_cross_user_cancel_rejected():
+    from app.lib.orders.order_service import cancel_order
+
+    order = _seed_order(user_id="u1", order_status="placed")
+    result = cancel_order(order.id, "u2")
+    assert result["success"] is False
+    assert result["code"] == "UNAUTHORIZED"
+
+
+def test_cross_user_return_rejected():
+    from app.lib.orders.order_service import request_return
+
+    order = _seed_order(user_id="u1", order_status="paid")
+    result = request_return(order.id, "u2")
+    assert result["success"] is False
+    assert result["code"] == "UNAUTHORIZED"
