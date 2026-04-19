@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Order Details — ShoeStore{% endblock %}
+{% block content %}
+
+<div class="d-flex align-items-center mb-4 gap-3">
+  <h2 class="mb-0">Order Details</h2>
+  <span class="badge {{ badge_class }} fs-6">{{ order.order_status | capitalize }}</span>
+</div>
+
+<p class="text-muted">
+  <strong>Order ID:</strong> <code>{{ order.id }}</code><br>
+  <strong>Date:</strong> {{ order.created_at[:10] }}<br>
+  <strong>Payment:</strong> {{ order.payment_method | replace("_", " ") | title }}
+</p>
+
+<h5>Items</h5>
+<table class="table table-sm mb-4">
+  <thead>
+    <tr>
+      <th>Product ID</th>
+      <th>Qty</th>
+      <th>Unit Price</th>
+      <th>Subtotal</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in order['items'] %}
+    <tr>
+      <td><small><code>{{ item.product_id[:8] }}…</code></small></td>
+      <td>{{ item.quantity }}</td>
+      <td>${{ "%.2f" | format(item.unit_price) }}</td>
+      <td>${{ "%.2f" | format(item.unit_price * item.quantity) }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<p class="fw-bold fs-5">Total: ${{ "%.2f" | format(order.total_amount) }}</p>
+
+<!-- Conditional action buttons (D-09) -->
+<div class="d-flex gap-3 mt-4">
+
+  {% if can_cancel %}
+  <div>
+    <div class="alert alert-warning py-2 px-3 mb-2">
+      <strong>Cancel Order:</strong> Are you sure you want to cancel this order?
+      This cannot be undone.
+    </div>
+    <form method="post" action="/orders/{{ order.id }}/cancel">
+      <button type="submit" class="btn btn-danger">Cancel Order</button>
+    </form>
+  </div>
+  {% endif %}
+
+  {% if can_return %}
+  <div>
+    <div class="alert alert-info py-2 px-3 mb-2">
+      <strong>Request Return:</strong> Submit a return request for this order?
+    </div>
+    <form method="post" action="/orders/{{ order.id }}/return">
+      <button type="submit" class="btn btn-warning">Request Return</button>
+    </form>
+  </div>
+  {% endif %}
+
+</div>
+
+<div class="mt-4">
+  <a href="/orders" class="btn btn-outline-secondary">Back to Orders</a>
+</div>
+
+{% endblock %}
