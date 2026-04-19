@@ -4,6 +4,7 @@
 # Message flow: strip [root]: prefix → guardrails check → agent.run() → JSON reply.
 import logging
 
+import config
 from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
@@ -12,6 +13,7 @@ from app.lib.agent import agent
 from app.lib.auth.dependencies import get_current_user_web
 from app.lib.auth.models import User
 from app.lib.guardrails.guardrails import check_message
+from app.lib.guardrails.root_instruction import parse_root_instruction
 from config import DEMO_MODE
 
 logger = logging.getLogger(__name__)
@@ -72,17 +74,35 @@ async def chat_message(
     if not user_message:
         raise HTTPException(status_code=400, detail="Message required")
 
-    # D-14: strip [root]: prefix in route handler before messages array is built.
+    # D-14: parse [root]: instructions in route handler before messages array is built.
     # Gated on DEMO_MODE so production behavior is unchanged.
-    # The stripped instruction (if any) is NOT processed here — Phase 5 handles it.
     if DEMO_MODE and user_message.startswith("[root]:"):
+        raw_instruction = user_message[len("[root]:"):].strip()
         logger.warning(
-            "Root instruction received from user_id=%s (Phase 5 feature — stripping)",
+            "Root instruction received from user_id=%s: %r",
             current_user.id,
+            raw_instruction,
         )
-        user_message = user_message[len("[root]:"):].strip()
-        if not user_message:
-            return JSONResponse({"reply": "Root instruction received. (Phase 5 feature — no action taken.)"})
+        if not raw_instruction:
+            return JSONResponse({"reply": "Root instruction received but was empty."})
+
+        result = parse_root_instruction(raw_instruction)
+        if result["success"]:
+            for section, keys in result["mutations"].items():
+                for key, value in keys.items():
+                    config.FAILURE_CONFIG[section][key] = value
+            logger.warning(
+                "FAILURE_CONFIG mutated by user_id=%s: %r",
+                current_user.id,
+                result["mutations"],
+            )
+        else:
+            logger.warning(
+                "Unrecognized root instruction from user_id=%s: %r",
+                current_user.id,
+                raw_instruction,
+            )
+        return JSONResponse({"reply": result["message"]})
 
     # D-06: Layer 1 guardrail — injection pattern check before agent sees the message.
     guard = check_message(user_message)
