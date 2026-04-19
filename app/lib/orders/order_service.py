@@ -162,6 +162,12 @@ def cancel_order(order_id: str, user_id: str) -> dict:
     order.order_status = "canceled"
     order.updated_at = _now_iso()
 
+    # Restore inventory for each canceled item
+    for item in order.items:
+        product = products_db.get(item.product_id)
+        if product:
+            product.inventory += item.quantity
+
     return {
         "success": True,
         "data": {"order_id": order.id, "order_status": "canceled"},
