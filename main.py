@@ -1,23 +1,26 @@
 # main.py
 # FastAPI application entry point.
-# Source of pattern: .planning/phases/01-domain-foundation/01-PATTERNS.md (main.py section)
-# Source of pattern: .planning/phases/01-domain-foundation/01-RESEARCH.md Pattern 2 (lifespan)
+# Lifespan populates all in-memory stores via seed() before the first request (D-09).
+# Source of pattern: .planning/phases/01-domain-foundation/01-PATTERNS.md main.py section.
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
+
+from app.lib.seed.seed import seed
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """FastAPI lifespan context manager.
 
-    Plan 03 wires `seed()` here to populate in-memory stores before the
-    first request is served. This no-op stub keeps `uvicorn main:app`
-    runnable while domain models are being built in Plan 02.
+    On startup, populate in-memory stores with demo data (15 products, 2 users,
+    3 orders) via seed(). If seed() raises, the app fails to start — fix the
+    seed data before deployment.
     """
-    # Startup: Plan 03 adds `from app.lib.seed.seed import seed; seed()`
+    # Startup: populate all in-memory stores.
+    seed()
     yield
-    # Shutdown: nothing to clean up for in-memory stores
+    # Shutdown: nothing to clean up for in-memory stores.
 
 
 app = FastAPI(title="ShoeStore AI Demo", lifespan=lifespan)
