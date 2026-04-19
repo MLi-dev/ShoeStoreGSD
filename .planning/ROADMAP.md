@@ -84,8 +84,13 @@ Plans:
   3. When required information is missing (e.g. "cancel my order" with multiple orders), the agent asks a clarifying question rather than failing or guessing
   4. Requests for off-topic content (recipes, math), prompt injection attempts, and requests to access another user's data are rejected with a polite scope refusal — no stack trace, no raw error
   5. When a mock payment or warehouse failure occurs mid-conversation, the agent surfaces what failed and suggests a concrete next step (retry, try different payment method, contact support)
-**Plans**: TBD
-**UI hint**: yes
+**Plans**: 4 plans
+
+Plans:
+- [ ] 04-01-PLAN.md — Wave 1 foundations: guardrails.py (injection detection), history.py (per-user conversation store), tools.py (10 agent tool functions wrapping existing services)
+- [ ] 04-02-PLAN.md — Wave 2 agent loop: agent.py (AsyncAnthropic tool-use loop, TOOL_SCHEMAS, MAX_TURNS=10, tool dispatch registry)
+- [ ] 04-03-PLAN.md — Wave 3 chat endpoint + UI: chat_router.py (GET /chat, POST /chat/message), chat/chat.html (AJAX transcript + marked.js), main.py + base.html wiring
+- [ ] 04-04-PLAN.md — Wave 4 tests: test_guardrails.py, test_agent_tools.py, test_chat_router.py (mocked agent, no real API calls)
 
 ### Phase 5: Evals & Demo Control
 **Goal**: The root token lets a demo operator reconfigure failure rates live without restarting; eval datasets cover positive, negative, and adversarial agent behaviors and are runnable
@@ -108,7 +113,7 @@ Plans:
 | 1. Domain Foundation | 4/4 | Complete | 2026-04-19 |
 | 2. Auth & Core Services | 3/3 | Complete | 2026-04-19 |
 | 3. Web UI & REST API | 6/6 | Complete | 2026-04-19 |
-| 4. Claude Agent | 0/? | Not started | - |
+| 4. Claude Agent | 0/4 | Not started | - |
 | 5. Evals & Demo Control | 0/? | Not started | - |
 
 ---
