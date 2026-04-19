@@ -8,6 +8,7 @@ from app.lib.cart.store import carts_db
 from app.lib.orders.store import orders_db
 from app.lib.catalog.store import products_db
 from app.lib.seed.seed import seed
+from app.lib.agent import history as agent_history
 
 @pytest.fixture(autouse=True)
 def reset_stores():
@@ -17,6 +18,7 @@ def reset_stores():
     carts_db.clear()
     orders_db.clear()
     products_db.clear()
+    agent_history._history.clear()
     seed()
     yield
     users_db.clear()
@@ -24,6 +26,7 @@ def reset_stores():
     carts_db.clear()
     orders_db.clear()
     products_db.clear()
+    agent_history._history.clear()
 
 @pytest.fixture
 def client():
