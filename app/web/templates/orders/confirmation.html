@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}Order Confirmed — ShoeStore{% endblock %}
+{% block content %}
+
+<div class="row justify-content-center">
+  <div class="col-md-7">
+    <div class="card">
+      <div class="card-body">
+        <h2 class="card-title text-center mb-4">
+          <i class="bi bi-check-circle-fill text-success"></i> Order Confirmed!
+        </h2>
+
+        <p><strong>Order ID:</strong> <code>{{ order.id }}</code></p>
+
+        <p>
+          <strong>Status:</strong>
+          {% set status = order.order_status %}
+          {% if status == "placed" %}
+            <span class="badge bg-secondary">Placed</span>
+          {% elif status == "paid" %}
+            <span class="badge bg-info text-dark">Paid</span>
+          {% elif status == "processing" %}
+            <span class="badge bg-warning text-dark">Processing</span>
+          {% elif status == "shipped" %}
+            <span class="badge bg-primary">Shipped</span>
+          {% elif status == "canceled" %}
+            <span class="badge bg-danger">Canceled</span>
+          {% else %}
+            <span class="badge bg-secondary">{{ status | capitalize }}</span>
+          {% endif %}
+        </p>
+
+        <p><strong>Payment:</strong> {{ order.payment_method | replace("_", " ") | title }}</p>
+
+        <h5 class="mt-4">Items</h5>
+        <table class="table table-sm">
+          <thead>
+            <tr><th>Product ID</th><th>Qty</th><th>Unit Price</th><th>Subtotal</th></tr>
+          </thead>
+          <tbody>
+            {% for item in order.items %}
+            <tr>
+              <td><small>{{ item.product_id[:8] }}…</small></td>
+              <td>{{ item.quantity }}</td>
+              <td>${{ "%.2f" | format(item.unit_price) }}</td>
+              <td>${{ "%.2f" | format(item.unit_price * item.quantity) }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+        <p class="fw-bold fs-5 text-end">Total: ${{ "%.2f" | format(order.total_amount) }}</p>
+
+        <div class="text-center mt-4">
+          <a href="/orders" class="btn btn-primary">View All Orders</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
