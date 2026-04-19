@@ -1,0 +1,98 @@
+# Roadmap — ShoeStore AI Demo
+
+**Project:** ShoeStore AI Demo
+**Milestone:** v1
+**Granularity:** Standard (5 phases)
+**Requirements mapped:** 33 / 33
+
+---
+
+## Phases
+
+- [ ] **Phase 1: Domain Foundation** - Scaffold the project, define all domain models, wire in-memory stores, and seed reference data — no HTTP, no LLM
+- [ ] **Phase 2: Auth & Core Services** - Shared JWT auth layer plus cart and order service logic verified by unit tests
+- [ ] **Phase 3: Web UI & REST API** - Mock adapters with failure injection, REST routers, and all Jinja2 web pages deliver the complete web shopping experience
+- [ ] **Phase 4: Claude Agent** - Tool registry, agentic loop, guardrails, and chat endpoint make every shopping and support flow available conversationally
+- [ ] **Phase 5: Evals & Demo Control** - Root-token live config, eval datasets for positive/negative/adversarial cases, and the complete testable demo harness
+
+---
+
+## Phase Details
+
+### Phase 1: Domain Foundation
+**Goal**: The project skeleton exists and all domain data can be created, stored, and retrieved in pure Python — no HTTP server, no LLM calls required
+**Depends on**: Nothing
+**Requirements**: CAT-01, CAT-04, SEED-01, SEED-02
+**Success Criteria** (what must be TRUE):
+  1. Running the app seeds 10-20 shoe products covering running, hiking, slides, sandals, and socks categories with name, description, price, inventory, and at least one size/color variant each
+  2. Running the app seeds at least 2 test users and 3 prior orders (one paid, one shipped, one canceled) accessible from the in-memory store
+  3. A Python unit test can create, read, and list products and orders without starting an HTTP server
+  4. The project directory structure, pyproject.toml (or requirements.txt), and FastAPI skeleton (no routes yet) are in place and `uvicorn` starts without errors
+**Plans**: TBD
+
+### Phase 2: Auth & Core Services
+**Goal**: Users can register, log in, and use a JWT that both the web UI and chat endpoint will recognize; cart and order service logic is fully exercised by unit tests
+**Depends on**: Phase 1
+**Requirements**: AUTH-01, AUTH-02, AUTH-03, AUTH-04, CART-01, CART-02, CART-03, CART-04
+**Success Criteria** (what must be TRUE):
+  1. A new user can register with email and password; the password is stored as a bcrypt hash, never plaintext
+  2. A registered user can log in and receive a JWT that remains valid across multiple requests (web and chat use the same token)
+  3. A user can initiate a password reset flow and set a new password
+  4. A unit test can add a product variant to a cart, update its quantity, remove it, and verify the cart total — no HTTP required
+  5. The cart rejects adding a product that has zero inventory
+**Plans**: TBD
+
+### Phase 3: Web UI & REST API
+**Goal**: A browser user can complete the full purchase lifecycle — browse, search, add to cart, check out, and manage orders — and mock adapters make failure scenarios injectable for demos
+**Depends on**: Phase 2
+**Requirements**: CAT-02, CAT-03, CHK-01, CHK-02, CHK-03, CHK-04, ORD-01, ORD-02, ORD-03, MOCK-01, MOCK-02
+**Success Criteria** (what must be TRUE):
+  1. User can search for shoes by keyword and see a results page; clicking a result shows a product detail page with variants
+  2. User can check out using Credit Card, PayPal, or Apple Pay and receive an order confirmation page after successful payment
+  3. User can view order status (placed → paid → processing → shipped → canceled) on an orders page
+  4. User can cancel an eligible order; a warehouse cancel mock runs and a payment refund mock runs if payment was captured
+  5. User can request a return on any paid, processing, or shipped order
+  6. Setting the warehouse `out_of_stock` failure probability to 1.0 causes checkout to fail with a clear error; setting payment failure probability to 1.0 causes the charge to fail with a clear error
+**Plans**: TBD
+**UI hint**: yes
+
+### Phase 4: Claude Agent
+**Goal**: Every shopping and support action available on the web is also available conversationally through a Claude-powered chat endpoint, with guardrails that prevent scope violations and graceful handling of mock failures
+**Depends on**: Phase 3
+**Requirements**: CHAT-01, CHAT-02, CHAT-03, CHAT-04, CHAT-05
+**Success Criteria** (what must be TRUE):
+  1. A logged-in user can search for shoes, add to cart, view cart, confirm checkout, and place an order entirely through the chat interface
+  2. A logged-in user can ask for order status, cancel an order, or request a return through chat; the agent verifies ownership before acting
+  3. When required information is missing (e.g. "cancel my order" with multiple orders), the agent asks a clarifying question rather than failing or guessing
+  4. Requests for off-topic content (recipes, math), prompt injection attempts, and requests to access another user's data are rejected with a polite scope refusal — no stack trace, no raw error
+  5. When a mock payment or warehouse failure occurs mid-conversation, the agent surfaces what failed and suggests a concrete next step (retry, try different payment method, contact support)
+**Plans**: TBD
+**UI hint**: yes
+
+### Phase 5: Evals & Demo Control
+**Goal**: The root token lets a demo operator reconfigure failure rates live without restarting; eval datasets cover positive, negative, and adversarial agent behaviors and are runnable
+**Depends on**: Phase 4
+**Requirements**: MOCK-03, TEST-01, TEST-02, TEST-03, TEST-04
+**Success Criteria** (what must be TRUE):
+  1. Prefixing a chat message with `[root]:` in demo mode updates the live failure config for the current run and is logged; the prefix is stripped before the message reaches the LLM; the config resets on process restart
+  2. A positive eval dataset exists with cases for successful search, add-to-cart, checkout, order status, and cancel — each case has `input`, `expected_trajectory`, `expected_output`, and `tags` fields
+  3. A negative eval dataset exists with cases for out-of-stock, payment failure, wrong user, and bad order ID scenarios
+  4. An adversarial eval dataset exists with cases for prompt injection, off-topic requests, typos, sarcasm, and all-caps input
+  5. All eval datasets can be loaded and a smoke-run of at least one case per dataset completes without an uncaught exception
+**Plans**: TBD
+
+---
+
+## Progress
+
+| Phase | Plans Complete | Status | Completed |
+|-------|----------------|--------|-----------|
+| 1. Domain Foundation | 0/? | Not started | - |
+| 2. Auth & Core Services | 0/? | Not started | - |
+| 3. Web UI & REST API | 0/? | Not started | - |
+| 4. Claude Agent | 0/? | Not started | - |
+| 5. Evals & Demo Control | 0/? | Not started | - |
+
+---
+
+*Last updated: 2026-04-18 by roadmapper*
