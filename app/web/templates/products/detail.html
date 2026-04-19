@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}{{ product.name }} — ShoeStore{% endblock %}
+{% block content %}
+
+<div class="row">
+  <!-- Product image placeholder -->
+  <div class="col-md-6">
+    <div class="bg-secondary rounded" style="height:400px;"></div>
+  </div>
+
+  <!-- Product info + Add to Cart form -->
+  <div class="col-md-6">
+    <h2>{{ product.name }}</h2>
+    <p class="text-muted">{{ product.category | capitalize }}</p>
+    <p class="fs-3 fw-semibold">${{ "%.2f" | format(product.unit_price) }}</p>
+    <p class="small text-muted">
+      {% if product.inventory > 0 %}
+        {{ product.inventory }} in stock
+      {% else %}
+        <span class="text-danger">Out of stock</span>
+      {% endif %}
+    </p>
+    <p>{{ product.description }}</p>
+
+    <form method="post" action="/cart/add">
+      <!-- CRITICAL: product_id must be a hidden POST field (RESEARCH.md Pitfall 7) -->
+      <input type="hidden" name="product_id" value="{{ product.id }}">
+
+      <div class="mb-3">
+        <label for="size" class="form-label">Size</label>
+        <select class="form-select" id="size" name="size" required>
+          {% set sizes = product.variants | map(attribute='size') | select | unique | list %}
+          {% if sizes %}
+            {% for s in sizes %}
+            <option value="{{ s }}">{{ s }}</option>
+            {% endfor %}
+          {% else %}
+            <option value="One Size">One Size</option>
+          {% endif %}
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label for="color" class="form-label">Color</label>
+        <select class="form-select" id="color" name="color" required>
+          {% set colors = product.variants | map(attribute='color') | select | unique | list %}
+          {% if colors %}
+            {% for c in colors %}
+            <option value="{{ c }}">{{ c }}</option>
+            {% endfor %}
+          {% else %}
+            <option value="Default">Default</option>
+          {% endif %}
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label for="quantity" class="form-label">Quantity</label>
+        <input type="number" class="form-control" id="quantity" name="quantity"
+               min="1" max="{{ product.inventory }}" value="1" required>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-lg w-100"
+              {% if product.inventory == 0 %}disabled{% endif %}>
+        Add to Cart
+      </button>
+    </form>
+
+    <div class="mt-3">
+      <a href="/products" class="text-muted small">&larr; Back to Products</a>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

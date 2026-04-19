@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Products — ShoeStore{% endblock %}
+{% block content %}
+
+<h2 class="mb-4">Shoes</h2>
+
+<!-- Search bar -->
+<form method="get" action="/products" class="mb-4">
+  <input type="hidden" name="category" value="{{ active_category }}">
+  <div class="input-group">
+    <input type="text" class="form-control" name="q" value="{{ q }}"
+           placeholder="Search shoes...">
+    <button type="submit" class="btn btn-primary">Search</button>
+  </div>
+</form>
+
+<!-- Category filter tabs -->
+<ul class="nav nav-tabs mb-4">
+  <li class="nav-item">
+    <a class="nav-link {% if not active_category %}active{% endif %}"
+       href="/products{% if q %}?q={{ q }}{% endif %}">All</a>
+  </li>
+  {% for cat in categories %}
+  <li class="nav-item">
+    <a class="nav-link {% if active_category == cat %}active{% endif %}"
+       href="/products?category={{ cat }}{% if q %}&q={{ q }}{% endif %}">
+      {{ cat | capitalize }}
+    </a>
+  </li>
+  {% endfor %}
+</ul>
+
+<!-- Product grid -->
+{% if products %}
+<div class="row row-cols-1 row-cols-md-3 g-4">
+  {% for product in products %}
+  <div class="col">
+    <div class="card h-100">
+      <div class="bg-secondary" style="height:200px;"></div>
+      <div class="card-body">
+        <h5 class="card-title">{{ product.name }}</h5>
+        <p class="card-text small text-muted">{{ product.category | capitalize }}</p>
+        <p class="card-text fw-semibold">${{ "%.2f" | format(product.unit_price) }}</p>
+        <a href="/products/{{ product.id }}"
+           class="btn btn-primary btn-sm stretched-link">View Details</a>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="text-center py-5">
+  <p class="text-muted">No products found matching your search.</p>
+  <a href="/products" class="btn btn-outline-primary">Clear filters</a>
+</div>
+{% endif %}
+
+{% endblock %}
