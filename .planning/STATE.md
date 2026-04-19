@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: Phase 3 Complete
-stopped_at: Phase 4 context gathered — chat UI, system prompt, guardrails, conversation history decisions captured
-last_updated: "2026-04-19T22:00:00.000Z"
+status: Phase 4 In Progress
+stopped_at: "04-01 complete — guardrails, history, tools foundation built; Plan 04-02 (agent loop) is next"
+last_updated: "2026-04-19T22:07:00.000Z"
 progress:
   total_phases: 5
   completed_phases: 3
-  total_plans: 13
-  completed_plans: 13
-  percent: 60
+  total_plans: 17
+  completed_plans: 14
+  percent: 62
 ---
 
 # STATE — ShoeStore AI Demo
@@ -31,9 +31,9 @@ progress:
 
 | Field | Value |
 |-------|-------|
-| Phase | 3 — Web UI & REST API |
-| Plan | 03-06 complete (6 of 6) |
-| Status | Phase 3 Complete |
+| Phase | 4 — Claude Agent |
+| Plan | 04-01 complete (1 of 4) |
+| Status | Phase 4 In Progress |
 | Mode | yolo |
 
 **Progress:**
@@ -42,11 +42,11 @@ progress:
 Phase 1 [##########] 100% ✓ Complete
 Phase 2 [##########] 100% ✓ Complete
 Phase 3 [##########] 100% ✓ Complete
-Phase 4 [          ] 0%
+Phase 4 [##        ] 25%
 Phase 5 [          ] 0%
 ```
 
-**Overall:** 3 / 5 phases complete (Phase 4 next)
+**Overall:** 3 / 5 phases complete (Phase 4 in progress — 1 of 4 plans done)
 
 ---
 
@@ -54,9 +54,9 @@ Phase 5 [          ] 0%
 
 | Metric | Value |
 |--------|-------|
-| Phases complete | 2 / 5 |
-| Requirements delivered | 31 / 33 |
-| Plans executed | 7 |
+| Phases complete | 3 / 5 |
+| Requirements delivered | 33 / 33 |
+| Plans executed | 14 |
 | Phases with issues | 0 |
 
 ---
@@ -77,6 +77,10 @@ Phase 5 [          ] 0%
 - **Store dicts empty at import time** — `users_db/products_db/carts_db/orders_db = {}` populated only by `seed()` in lifespan (D-08)
 - **POST /cart/add in catalog_router** — form action on product detail page; cart_router owns GET /cart, POST /cart/update, /cart/remove, POST /checkout
 - **`str | None` union syntax** throughout — no `Optional[]` from typing; built-in `list[]/dict[]` generics only
+- **Tool functions wrap service layer** — tools.py calls service functions and converts dataclasses to serializable dicts; never returns dataclass instances
+- **user_id as first param on all tool functions** — enforces D-15 ownership from authenticated session, never from message content
+- **get_messages() returns a list copy** — prevents external mutation of stored history outside the asyncio.Lock (T-04-01)
+- **reset_password chains reset_request+reset_confirm** — resolves email from users_db by user_id from JWT; email never from user message (T-04-05)
 
 ### Critical Pitfalls (from research)
 
@@ -125,9 +129,9 @@ Phase 5 [          ] 0%
 
 ## Session Continuity
 
-**Last session:** 2026-04-19T21:00:00Z
-**Stopped at:** Phase 3 human-approved — full web UI working; inventory tracks on purchase/cancel; confirmation page fixed; 131 passed + 44 xpassed
-**Next action:** Plan and execute Phase 4 (Claude Agent)
+**Last session:** 2026-04-19T22:07:00Z
+**Stopped at:** 04-01 complete — guardrails (5-pattern injection detection), history (asyncio.Lock per-user store), tools (10 async functions wrapping all services) — 3 commits b2488fd, c5a7989, e3223be
+**Next action:** Execute Plan 04-02 (agent loop — AsyncAnthropic tool-use loop with MAX_TURNS=10)
 
 ---
 
