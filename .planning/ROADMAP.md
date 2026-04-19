@@ -68,7 +68,7 @@ Plans:
 
 Plans:
 - [x] 03-01-PLAN.md — Wave 0 test stubs: integration conftest + all 7 test files (unit + integration) with xfail markers covering CAT-02, CAT-03, CHK-01–04, ORD-01–03, MOCK-01–02
-- [ ] 03-02-PLAN.md — Foundation modules: config.py FAILURE_CONFIG fix (6 payment keys), warehouse_mock.py, payment_mock.py, catalog_service.py, auth/dependencies.py
+- [x] 03-02-PLAN.md — Foundation modules: config.py FAILURE_CONFIG fix (6 payment keys), warehouse_mock.py, payment_mock.py, catalog_service.py, auth/dependencies.py
 - [ ] 03-03-PLAN.md — Auth layer: main.py SessionMiddleware + router wiring, auth_router.py (6 endpoints), base.html + 4 auth templates
 - [ ] 03-04-PLAN.md — Catalog UI: catalog_router.py (GET /products, GET /products/{id}, POST /cart/add), products/list.html + products/detail.html
 - [ ] 03-05-PLAN.md — Cart & checkout: cart_router.py (GET /cart, POST /cart/update, /cart/remove, POST /checkout), cart.html + orders/confirmation.html
@@ -107,7 +107,7 @@ Plans:
 |-------|----------------|--------|-----------|
 | 1. Domain Foundation | 4/4 | Complete | 2026-04-19 |
 | 2. Auth & Core Services | 3/3 | Complete | 2026-04-19 |
-| 3. Web UI & REST API | 1/6 | In Progress | - |
+| 3. Web UI & REST API | 2/6 | In Progress | - |
 | 4. Claude Agent | 0/? | Not started | - |
 | 5. Evals & Demo Control | 0/? | Not started | - |
 
