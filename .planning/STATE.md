@@ -32,7 +32,7 @@ progress:
 | Field | Value |
 |-------|-------|
 | Phase | 3 — Web UI & REST API |
-| Plan | 03-03 complete (3 of 6) |
+| Plan | 03-04 complete (4 of 6) |
 | Status | Phase 3 In Progress |
 | Mode | yolo |
 
@@ -41,7 +41,7 @@ progress:
 ```
 Phase 1 [##########] 100% ✓ Complete
 Phase 2 [##########] 100% ✓ Complete
-Phase 3 [#####     ] 50% (3/6 plans)
+Phase 3 [######    ] 67% (4/6 plans)
 Phase 4 [          ] 0%
 Phase 5 [          ] 0%
 ```
@@ -75,6 +75,7 @@ Phase 5 [          ] 0%
 - **Returns allowed on paid/processing/shipped** — not restricted to shipped-only
 - **`field(default_factory=list)`** mandatory for list fields on dataclasses — bare `= []` causes shared-mutable-default bug across all instances
 - **Store dicts empty at import time** — `users_db/products_db/carts_db/orders_db = {}` populated only by `seed()` in lifespan (D-08)
+- **POST /cart/add in catalog_router** — form action on product detail page; cart_router owns GET /cart, POST /cart/update, /cart/remove, POST /checkout
 - **`str | None` union syntax** throughout — no `Optional[]` from typing; built-in `list[]/dict[]` generics only
 
 ### Critical Pitfalls (from research)
@@ -125,8 +126,8 @@ Phase 5 [          ] 0%
 ## Session Continuity
 
 **Last session:** 2026-04-19T19:47:40.769Z
-**Stopped at:** Phase 3 Plan 03 complete — auth_router, base.html, 4 auth templates; 131 passed + 31 xpassed
-**Next action:** Execute Phase 3 Plan 04 (catalog router + product list/detail pages)
+**Stopped at:** Phase 3 Plan 04 complete — catalog_router.py, products/list.html, products/detail.html; 131 passed + 26 xpassed
+**Next action:** Execute Phase 3 Plan 05 (cart router + cart.html + orders/confirmation.html)
 
 ---
 
