@@ -2,9 +2,9 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: Phase 4 In Progress
-stopped_at: 04-03 complete — chat_router.py (GET /chat + POST /chat/message), chat/chat.html (marked.js transcript), main.py + base.html wired; Plan 04-04 (Langfuse tracer) is next
-last_updated: "2026-04-19T22:18:13Z"
+status: Phase 4 Complete
+stopped_at: 04-04 complete — test_guardrails.py (19 tests), test_agent_tools.py (28 tests), test_chat_router.py (10 tests, agent.run mocked); Phase 4 all 4 plans done
+last_updated: "2026-04-19T22:22:00Z"
 progress:
   total_phases: 5
   completed_phases: 3
@@ -32,8 +32,8 @@ progress:
 | Field | Value |
 |-------|-------|
 | Phase | 4 — Claude Agent |
-| Plan | 04-03 complete (3 of 4) |
-| Status | Phase 4 In Progress |
+| Plan | 04-04 complete (4 of 4) |
+| Status | Phase 4 Complete |
 | Mode | yolo |
 
 **Progress:**
@@ -42,7 +42,7 @@ progress:
 Phase 1 [##########] 100% ✓ Complete
 Phase 2 [##########] 100% ✓ Complete
 Phase 3 [##########] 100% ✓ Complete
-Phase 4 [######    ] 75%
+Phase 4 [##########] 100% ✓ Complete
 Phase 5 [          ] 0%
 ```
 
@@ -133,9 +133,9 @@ Phase 5 [          ] 0%
 
 ## Session Continuity
 
-**Last session:** 2026-04-19T22:18:13Z
-**Stopped at:** 04-03 complete — chat_router.py (GET /chat + POST /chat/message), chat/chat.html (marked.js transcript), main.py + base.html wired; commits 520cd03, 9edde90
-**Next action:** Execute Plan 04-04 (Langfuse observability tracer)
+**Last session:** 2026-04-19T22:22:00Z
+**Stopped at:** 04-04 complete — test_guardrails.py (19 tests), test_agent_tools.py (28 tests), test_chat_router.py (10 tests); commits 8375e35, 8f5b0df; Phase 4 all plans complete
+**Next action:** Execute Phase 5 (Evals & Demo Control)
 
 ---
 
