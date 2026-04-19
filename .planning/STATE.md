@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: Executing Phase 1
-last_updated: "2026-04-19T02:53:38Z"
+last_updated: "2026-04-19T02:56:31Z"
 progress:
   total_phases: 5
   completed_phases: 0
   total_plans: 4
-  completed_plans: 1
-  percent: 25
+  completed_plans: 2
+  percent: 50
 ---
 
 # STATE — ShoeStore AI Demo
@@ -31,14 +31,14 @@ progress:
 | Field | Value |
 |-------|-------|
 | Phase | 1 — Domain Foundation |
-| Plan | Wave 1 — Plan 01 Complete, Plan 02 Next |
+| Plan | Wave 2 — Plan 02 Complete, Plan 03 Next |
 | Status | In progress |
 | Mode | yolo |
 
 **Progress:**
 
 ```
-Phase 1 [##        ] 25% (1/4 plans)
+Phase 1 [####      ] 50% (2/4 plans)
 Phase 2 [          ] 0%
 Phase 3 [          ] 0%
 Phase 4 [          ] 0%
@@ -55,7 +55,7 @@ Phase 5 [          ] 0%
 |--------|-------|
 | Phases complete | 0 / 5 |
 | Requirements delivered | 0 / 33 |
-| Plans executed | 1 |
+| Plans executed | 2 |
 | Phases with issues | 0 |
 
 ---
@@ -72,6 +72,9 @@ Phase 5 [          ] 0%
 - **`[root]:` stripped in route handler** before building messages array, gated on `DEMO_MODE`
 - **No streaming token output** — conflicts with agentic tool-use loop; return complete responses
 - **Returns allowed on paid/processing/shipped** — not restricted to shipped-only
+- **`field(default_factory=list)`** mandatory for list fields on dataclasses — bare `= []` causes shared-mutable-default bug across all instances
+- **Store dicts empty at import time** — `users_db/products_db/carts_db/orders_db = {}` populated only by `seed()` in lifespan (D-08)
+- **`str | None` union syntax** throughout — no `Optional[]` from typing; built-in `list[]/dict[]` generics only
 
 ### Critical Pitfalls (from research)
 
@@ -120,9 +123,9 @@ Phase 5 [          ] 0%
 
 ## Session Continuity
 
-**Last session:** 2026-04-19T02:53:38Z
-**Stopped at:** Completed 01-01-PLAN.md (project scaffold)
-**Next action:** Execute 01-02-PLAN.md (domain models and in-memory stores)
+**Last session:** 2026-04-19T02:56:31Z
+**Stopped at:** Completed 01-02-PLAN.md (domain models and in-memory stores)
+**Next action:** Execute 01-03-PLAN.md (seed data and lifespan wiring)
 
 ---
 

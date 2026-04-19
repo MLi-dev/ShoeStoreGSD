@@ -21,7 +21,7 @@
 - [ ] **CAT-01**: App seeds 10–20 shoe products on startup (running, hiking, slides, sandals, socks) with name, description, unit price, inventory, category
 - [ ] **CAT-02**: User can search for products by keyword via web UI and chatbot
 - [ ] **CAT-03**: User can view product detail page (web) or ask for details (chat)
-- [ ] **CAT-04**: Products support size/color variants
+- [x] **CAT-04**: Products support size/color variants
 
 ### Cart (CART)
 
