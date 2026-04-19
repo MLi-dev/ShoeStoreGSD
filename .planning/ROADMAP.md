@@ -72,7 +72,7 @@ Plans:
 - [x] 03-03-PLAN.md — Auth layer: main.py SessionMiddleware + router wiring, auth_router.py (6 endpoints), base.html + 4 auth templates
 - [x] 03-04-PLAN.md — Catalog UI: catalog_router.py (GET /products, GET /products/{id}, POST /cart/add), products/list.html + products/detail.html
 - [x] 03-05-PLAN.md — Cart & checkout: cart_router.py (GET /cart, POST /cart/update, /cart/remove, POST /checkout), cart.html + orders/confirmation.html
-- [ ] 03-06-PLAN.md — Orders UI: orders_router.py (GET /orders, GET /orders/{id}, GET /orders/{id}/confirmation, POST /cancel, POST /return), orders/list.html + orders/detail.html
+- [x] 03-06-PLAN.md — Orders UI: orders_router.py (GET /orders, GET /orders/{id}, GET /orders/{id}/confirmation, POST /cancel, POST /return), orders/list.html + orders/detail.html
 
 ### Phase 4: Claude Agent
 **Goal**: Every shopping and support action available on the web is also available conversationally through a Claude-powered chat endpoint, with guardrails that prevent scope violations and graceful handling of mock failures
@@ -107,7 +107,7 @@ Plans:
 |-------|----------------|--------|-----------|
 | 1. Domain Foundation | 4/4 | Complete | 2026-04-19 |
 | 2. Auth & Core Services | 3/3 | Complete | 2026-04-19 |
-| 3. Web UI & REST API | 5/6 | In Progress | - |
+| 3. Web UI & REST API | 6/6 | Complete | 2026-04-19 |
 | 4. Claude Agent | 0/? | Not started | - |
 | 5. Evals & Demo Control | 0/? | Not started | - |
 
