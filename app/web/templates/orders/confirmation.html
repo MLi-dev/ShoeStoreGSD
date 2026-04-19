@@ -38,7 +38,7 @@
             <tr><th>Product ID</th><th>Qty</th><th>Unit Price</th><th>Subtotal</th></tr>
           </thead>
           <tbody>
-            {% for item in order.items %}
+            {% for item in order['items'] %}
             <tr>
               <td><small>{{ item.product_id[:8] }}…</small></td>
               <td>{{ item.quantity }}</td>
