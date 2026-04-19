@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% block title %}Chat — ShoeStore{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <h2 class="mb-4">ShoeStore Assistant</h2>
+
+    <!-- Transcript area (D-03: transcript only, no cart widget) -->
+    <div
+      id="transcript"
+      class="border rounded bg-white p-3 mb-3"
+      style="min-height: 400px; max-height: 60vh; overflow-y: auto;"
+    >
+      <!-- Messages appended here by JS -->
+      <div class="text-muted small text-center mt-4">
+        Hi {{ current_user.email }}! How can I help you today?
+      </div>
+    </div>
+
+    <!-- Input area -->
+    <div class="input-group">
+      <input
+        id="user-input"
+        type="text"
+        class="form-control"
+        placeholder="Ask about shoes, your cart, or your orders..."
+        autocomplete="off"
+        maxlength="500"
+      />
+      <button class="btn btn-primary" id="send-btn" onclick="sendMessage()">
+        <i class="bi bi-send"></i> Send
+      </button>
+    </div>
+    <div class="form-text text-muted mt-1">
+      Press Enter to send. Navbar links: Products, Cart, Orders.
+    </div>
+  </div>
+</div>
+
+<!-- D-02: marked.js from CDN — no build step -->
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+  // Allow Enter key to submit
+  document.getElementById("user-input").addEventListener("keydown", function(e) {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  });
+
+  function appendMessage(role, text) {
+    const transcript = document.getElementById("transcript");
+    const div = document.createElement("div");
+    div.className = "mb-3 " + (role === "agent" ? "text-start" : "text-end");
+
+    if (role === "agent") {
+      // D-02: render agent responses as markdown via marked.js
+      div.innerHTML =
+        '<div class="d-inline-block bg-light border rounded p-2 text-start" style="max-width:85%">'
+        + marked.parse(text)
+        + '</div>';
+    } else {
+      // D-03: user messages rendered as plain text (escape HTML)
+      const escaped = text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+      div.innerHTML =
+        '<div class="d-inline-block bg-primary text-white rounded p-2" style="max-width:85%">'
+        + escaped
+        + '</div>';
+    }
+
+    transcript.appendChild(div);
+    div.scrollIntoView({ behavior: "smooth" });
+  }
+
+  function setLoading(loading) {
+    const btn = document.getElementById("send-btn");
+    const input = document.getElementById("user-input");
+    btn.disabled = loading;
+    input.disabled = loading;
+    btn.innerHTML = loading
+      ? '<span class="spinner-border spinner-border-sm" role="status"></span> Thinking...'
+      : '<i class="bi bi-send"></i> Send';
+  }
+
+  async function sendMessage() {
+    const input = document.getElementById("user-input");
+    const message = input.value.trim();
+    if (!message) return;
+
+    appendMessage("user", message);
+    input.value = "";
+    setLoading(true);
+
+    try {
+      const response = await fetch("/chat/message", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message }),
+      });
+
+      if (response.status === 307 || response.redirected) {
+        // Session expired — redirect to login
+        window.location.href = "/login?next=/chat";
+        return;
+      }
+
+      if (!response.ok) {
+        const err = await response.json().catch(() => ({ detail: "Unknown error" }));
+        appendMessage("agent", "Sorry, something went wrong. Please try again.");
+        console.error("Chat error:", err);
+        return;
+      }
+
+      const data = await response.json();
+      appendMessage("agent", data.reply);
+    } catch (err) {
+      appendMessage("agent", "Connection error. Please check your network and try again.");
+      console.error("Fetch error:", err);
+    } finally {
+      setLoading(false);
+      document.getElementById("user-input").focus();
+    }
+  }
+</script>
+{% endblock %}

@@ -35,8 +35,10 @@ from app.api.auth_router import router as auth_router       # noqa: E402
 from app.api.catalog_router import router as catalog_router  # noqa: E402
 from app.api.cart_router import router as cart_router        # noqa: E402
 from app.api.orders_router import router as orders_router    # noqa: E402
+from app.api.chat_router import router as chat_router        # noqa: E402
 
 app.include_router(auth_router)
 app.include_router(catalog_router)
 app.include_router(cart_router)
 app.include_router(orders_router)
+app.include_router(chat_router)
