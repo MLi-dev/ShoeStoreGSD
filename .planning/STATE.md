@@ -3,7 +3,7 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: Phase 4 In Progress
-stopped_at: "04-01 complete — guardrails, history, tools foundation built; Plan 04-02 (agent loop) is next"
+stopped_at: "04-02 complete — AsyncAnthropic agent loop with MAX_TURNS=10 and 10-tool registry; Plan 04-03 (chat endpoint) is next"
 last_updated: "2026-04-19T22:07:00.000Z"
 progress:
   total_phases: 5
@@ -32,7 +32,7 @@ progress:
 | Field | Value |
 |-------|-------|
 | Phase | 4 — Claude Agent |
-| Plan | 04-01 complete (1 of 4) |
+| Plan | 04-02 complete (2 of 4) |
 | Status | Phase 4 In Progress |
 | Mode | yolo |
 
@@ -42,11 +42,11 @@ progress:
 Phase 1 [##########] 100% ✓ Complete
 Phase 2 [##########] 100% ✓ Complete
 Phase 3 [##########] 100% ✓ Complete
-Phase 4 [##        ] 25%
+Phase 4 [####      ] 50%
 Phase 5 [          ] 0%
 ```
 
-**Overall:** 3 / 5 phases complete (Phase 4 in progress — 1 of 4 plans done)
+**Overall:** 3 / 5 phases complete (Phase 4 in progress — 2 of 4 plans done)
 
 ---
 
@@ -81,6 +81,8 @@ Phase 5 [          ] 0%
 - **user_id as first param on all tool functions** — enforces D-15 ownership from authenticated session, never from message content
 - **get_messages() returns a list copy** — prevents external mutation of stored history outside the asyncio.Lock (T-04-01)
 - **reset_password chains reset_request+reset_confirm** — resolves email from users_db by user_id from JWT; email never from user message (T-04-05)
+- **Intermediate tool-use turns not stored in history** — history stores only user message + final assistant reply; tool-use assistant/user turns live only in local messages copy for that call
+- **anthropic added to pyproject.toml** — was missing from project dependencies; added via `uv add` during 04-02 execution
 
 ### Critical Pitfalls (from research)
 
@@ -129,9 +131,9 @@ Phase 5 [          ] 0%
 
 ## Session Continuity
 
-**Last session:** 2026-04-19T22:07:00Z
-**Stopped at:** 04-01 complete — guardrails (5-pattern injection detection), history (asyncio.Lock per-user store), tools (10 async functions wrapping all services) — 3 commits b2488fd, c5a7989, e3223be
-**Next action:** Execute Plan 04-02 (agent loop — AsyncAnthropic tool-use loop with MAX_TURNS=10)
+**Last session:** 2026-04-19T22:14:06Z
+**Stopped at:** 04-02 complete — agent.py with AsyncAnthropic tool-use loop, TOOL_SCHEMAS (10 entries), _TOOL_REGISTRY (10 entries), MAX_TURNS=10; anthropic>=0.96.0 added to pyproject.toml — commit 0336e70
+**Next action:** Execute Plan 04-03 (chat endpoint + UI — chat_router.py, chat/chat.html, main.py wiring)
 
 ---
 
