@@ -6,12 +6,16 @@
 
 FAILURE_CONFIG: dict[str, dict[str, float]] = {
     "warehouse": {
-        "out_of_stock": 0.10,
-        "failed_to_cancel_order": 0.20,
+        "out_of_stock": 0.0,
+        "failed_to_cancel_order": 0.0,
     },
     "payment": {
-        "failed_to_charge_credit_card": 0.03,
-        "failed_to_refund_paypal": 0.08,
+        "failed_to_charge_credit_card": 0.0,
+        "failed_to_charge_paypal": 0.0,
+        "failed_to_charge_apple_pay": 0.0,
+        "failed_to_refund_credit_card": 0.0,
+        "failed_to_refund_paypal": 0.0,
+        "failed_to_refund_apple_pay": 0.0,
     },
 }
 
