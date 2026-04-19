@@ -6,6 +6,7 @@ from typing import Literal
 from uuid import uuid4
 
 from app.lib.cart.store import carts_db
+from app.lib.catalog.store import products_db
 from app.lib.orders.models import Order, OrderItem
 from app.lib.orders.store import orders_db
 
@@ -100,6 +101,11 @@ def place_order(
     )
 
     orders_db[order.id] = order
+    # Decrement inventory for each purchased item
+    for item in order_items:
+        product = products_db.get(item.product_id)
+        if product:
+            product.inventory = max(0, product.inventory - item.quantity)
     # Clear cart after placing order
     del carts_db[user_id]
 
