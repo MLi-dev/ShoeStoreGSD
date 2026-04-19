@@ -1,0 +1,41 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-04-19T20:15:00.000Z",
+  "phase": "3",
+  "phase_name": "Web UI & REST API",
+  "phase_dir": ".planning/phases/03-web-ui-rest-api",
+  "plan": 0,
+  "task": 0,
+  "total_tasks": 12,
+  "status": "paused",
+  "completed_tasks": [],
+  "remaining_tasks": [
+    {"id": 1, "name": "03-01: Wave 0 test stubs (xfail) for all 11 requirements", "status": "not_started"},
+    {"id": 2, "name": "03-02: config.py FAILURE_CONFIG fix, mock adapters, catalog service, auth dependencies", "status": "not_started"},
+    {"id": 3, "name": "03-03: main.py wiring, auth_router, base.html, 4 auth templates", "status": "not_started"},
+    {"id": 4, "name": "03-04: catalog_router, products/list.html, products/detail.html (Wave 3a)", "status": "not_started"},
+    {"id": 5, "name": "03-05: cart_router, cart.html, orders/confirmation.html (Wave 3b, parallel)", "status": "not_started"},
+    {"id": 6, "name": "03-06: orders_router, orders/list.html, orders/detail.html (Wave 4)", "status": "not_started"}
+  ],
+  "blockers": [],
+  "human_actions_pending": [],
+  "decisions": [
+    {"decision": "JWT in httpOnly cookie (SameSite=Lax)", "rationale": "Single auth mechanism for web + API; D-01 CONTEXT.md", "phase": "3"},
+    {"decision": "Two auth dependency variants: get_current_user_web (redirect) vs get_current_user_api (401)", "rationale": "Web pages redirect to login; API callers need 401", "phase": "3"},
+    {"decision": "Checkout order: reserve_inventory -> charge -> place_order", "rationale": "Prevents orphaned orders with pending payment; research finding", "phase": "3"},
+    {"decision": "Plans 03-04 and 03-05 run in parallel (Wave 3)", "rationale": "No file overlap between catalog UI and cart/checkout UI", "phase": "3"}
+  ],
+  "uncommitted_files": [
+    ".planning/STATE.md",
+    ".planning/phases/03-web-ui-rest-api/03-PATTERNS.md",
+    ".planning/phases/03-web-ui-rest-api/03-VALIDATION.md",
+    ".planning/phases/03-web-ui-rest-api/03-01-PLAN.md",
+    ".planning/phases/03-web-ui-rest-api/03-02-PLAN.md",
+    ".planning/phases/03-web-ui-rest-api/03-03-PLAN.md",
+    ".planning/phases/03-web-ui-rest-api/03-04-PLAN.md",
+    ".planning/phases/03-web-ui-rest-api/03-05-PLAN.md",
+    ".planning/phases/03-web-ui-rest-api/03-06-PLAN.md"
+  ],
+  "next_action": "Run /gsd-execute-phase 3 in a fresh context window to begin execution",
+  "context_notes": "Phase 3 planning is 100% complete. Research, pattern mapping, planning, and plan verification all passed. 6 plans across 4 waves (+ Wave 0). Verification found one advisory (RESEARCH.md open questions lack RESOLVED suffix) — non-blocking. Plans 03-04 and 03-05 can run in parallel in Wave 3. No blockers."
+}
