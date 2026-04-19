@@ -1,7 +1,8 @@
 ---
 phase: 3
 slug: web-ui-rest-api
-status: draft
+status: approved
+reviewed_at: 2026-04-19
 shadcn_initialized: false
 preset: none
 created: 2026-04-19
@@ -52,14 +53,18 @@ Exceptions:
 
 Bootstrap 5 default type scale; no additional @font-face declarations.
 
+Four sizes only — no exceptions.
+
 | Role | Bootstrap class | Size | Weight | Line Height |
 |------|----------------|------|--------|-------------|
 | Body | (default) | 16px | 400 (regular) | 1.5 |
 | Label / small | `small`, `fs-6` | 14px | 400 (regular) | 1.4 |
-| Heading (section) | `h5`, `h4` | 20px / 24px | 600 (semibold) | 1.2 |
+| Heading (section) | `h5` | 20px | 600 (semibold) | 1.2 |
 | Display (page title) | `h2`, `display-6` | 28px | 600 (semibold) | 1.2 |
 
 Weights in use: 400 (regular) and 600 (semibold) — no other weights.
+
+Note: `h4` (24px) is removed from the scale. All in-page section headings use `h5` (20px). Page-level titles use `h2`/`display-6` (28px) only.
 
 Source: Bootstrap 5 defaults (D-06: minimal customization)
 
@@ -129,6 +134,8 @@ Prescriptive Bootstrap components per page.
 - `container` wrapping block content (max-width responsive)
 
 ### Product List (`/products`)
+**Focal point:** The primary visual anchor is the product card grid; the "View Details" `btn-primary` stretched-link on each card is the sole conversion action per product.
+
 - Search: `input-group` with text input and "Search" `btn-primary` button, `GET /products?q=`
 - Category tabs: `nav nav-tabs` with links: All / Running / Hiking / Slides / Sandals / Socks. Active tab has `active` class. Combines with `?q=` param.
 - Products grid: `row row-cols-1 row-cols-md-3 g-4` of `card h-100`
@@ -136,6 +143,8 @@ Prescriptive Bootstrap components per page.
 - No inline Add to Cart on the list page
 
 ### Product Detail (`/products/{id}`)
+**Focal point:** The primary visual anchor is the full-width "Add to Cart" `btn btn-primary btn-lg w-100` button — variant selectors and quantity are prerequisites that lead the eye directly to it.
+
 - `row` with col-md-6 left (product image placeholder) and col-md-6 right (info + form)
 - Info: `h2` name, `text-muted` category, price `fs-3 fw-semibold`, inventory `small text-muted`
 - Variant selector: `<select class="form-select">` for Size and `<select class="form-select">` for Color
@@ -144,6 +153,8 @@ Prescriptive Bootstrap components per page.
 - On success: redirect to `/cart`
 
 ### Cart (`/cart`)
+**Focal point:** The primary visual anchor is the "Place Order" `btn btn-primary btn-lg w-100` button in the order summary card — the cart table and payment selector exist solely to lead to this action.
+
 - Cart items: `table table-borderless` with columns: Product, Size/Color, Qty (editable input), Unit Price, Subtotal, Remove (X button)
 - Order summary card: `card` right column with subtotal, "Select Payment Method" section
 - Payment method: `form-check` radio buttons — Credit Card, PayPal, Apple Pay (one selected by default)
@@ -151,11 +162,15 @@ Prescriptive Bootstrap components per page.
 - Empty cart state: centered `text-muted` with message and "Browse Products" link
 
 ### Orders List (`/orders`)
+**Focal point:** The primary visual anchor is the order status badge column; "View Details" links are secondary and provide drill-down access.
+
 - `table table-hover` with columns: Order ID (truncated to 8 chars + ellipsis), Date, Status (badge), Total, Actions
 - Actions: "View Details" `btn btn-outline-primary btn-sm`
 - Empty state: `text-muted` centered message
 
 ### Order Detail (`/orders/{id}`)
+**Focal point:** The primary visual anchor is the order status badge in the header; conditional action buttons (Cancel / Return) are secondary focal points rendered only when eligible.
+
 - Order summary header: order ID, date, status badge
 - `table` of line items: product name, size/color, qty, price
 - Total `fw-bold`
@@ -164,9 +179,13 @@ Prescriptive Bootstrap components per page.
   - Request Return: `btn btn-warning` — shown when status is `paid`, `processing`, or `shipped`
 
 ### Order Confirmation (`/orders/{id}/confirmation`)
+**Focal point:** The primary visual anchor is the order confirmation card with the order ID and status badge; "View All Orders" is the single forward-navigation CTA.
+
 - `card` centered: order ID, items list, total, payment method, status badge, "View All Orders" `btn btn-primary` link
 
 ### Auth Pages (login, register, reset-request, reset-confirm)
+**Focal point:** The primary visual anchor on every auth page is the full-width primary submit button (`btn btn-primary w-100`) — all form fields are prereqs that lead to it.
+
 - Centered narrow `col-md-4 offset-md-4` card layout
 - `form` with `mb-3` field groups, `label`, `form-control` inputs
 - Primary submit: `btn btn-primary w-100`
