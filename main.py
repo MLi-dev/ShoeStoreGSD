@@ -5,6 +5,7 @@
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
+from starlette.middleware.sessions import SessionMiddleware
 
 from app.lib.seed.seed import seed
 
@@ -24,4 +25,18 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title="ShoeStore AI Demo", lifespan=lifespan)
-# No routers registered in Phase 1 — Phase 2+ adds auth, catalog, cart, orders, chat routers.
+
+# SessionMiddleware enables request.session for flash messages (D-01 itsdangerous).
+# secret_key is dev-only; not used for JWT or user auth.
+app.add_middleware(SessionMiddleware, secret_key="dev-flash-secret")
+
+# Router registration — routers created in Phase 3 plans 03–06.
+from app.api.auth_router import router as auth_router       # noqa: E402
+from app.api.catalog_router import router as catalog_router  # noqa: E402
+from app.api.cart_router import router as cart_router        # noqa: E402
+from app.api.orders_router import router as orders_router    # noqa: E402
+
+app.include_router(auth_router)
+app.include_router(catalog_router)
+app.include_router(cart_router)
+app.include_router(orders_router)
