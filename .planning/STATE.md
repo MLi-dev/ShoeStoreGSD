@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: Phase 4 In Progress
-stopped_at: "04-02 complete — AsyncAnthropic agent loop with MAX_TURNS=10 and 10-tool registry; Plan 04-03 (chat endpoint) is next"
-last_updated: "2026-04-19T22:07:00.000Z"
+stopped_at: 04-03 complete — chat_router.py (GET /chat + POST /chat/message), chat/chat.html (marked.js transcript), main.py + base.html wired; Plan 04-04 (Langfuse tracer) is next
+last_updated: "2026-04-19T22:18:13Z"
 progress:
   total_phases: 5
   completed_phases: 3
   total_plans: 17
-  completed_plans: 14
-  percent: 62
+  completed_plans: 15
+  percent: 75
 ---
 
 # STATE — ShoeStore AI Demo
@@ -32,7 +32,7 @@ progress:
 | Field | Value |
 |-------|-------|
 | Phase | 4 — Claude Agent |
-| Plan | 04-02 complete (2 of 4) |
+| Plan | 04-03 complete (3 of 4) |
 | Status | Phase 4 In Progress |
 | Mode | yolo |
 
@@ -42,11 +42,11 @@ progress:
 Phase 1 [##########] 100% ✓ Complete
 Phase 2 [##########] 100% ✓ Complete
 Phase 3 [##########] 100% ✓ Complete
-Phase 4 [####      ] 50%
+Phase 4 [######    ] 75%
 Phase 5 [          ] 0%
 ```
 
-**Overall:** 3 / 5 phases complete (Phase 4 in progress — 2 of 4 plans done)
+**Overall:** 3 / 5 phases complete (Phase 4 in progress — 3 of 4 plans done)
 
 ---
 
@@ -83,6 +83,8 @@ Phase 5 [          ] 0%
 - **reset_password chains reset_request+reset_confirm** — resolves email from users_db by user_id from JWT; email never from user message (T-04-05)
 - **Intermediate tool-use turns not stored in history** — history stores only user message + final assistant reply; tool-use assistant/user turns live only in local messages copy for that call
 - **anthropic added to pyproject.toml** — was missing from project dependencies; added via `uv add` during 04-02 execution
+- **Guard rejections return HTTP 200 with reply message** — avoids leaking injection detection to attackers; HTTPException(500) only on genuine agent loop failures
+- **Chat navbar link inside `{% if current_user %}` block** — hidden from unauthenticated users; consistent with existing auth-gated nav pattern
 
 ### Critical Pitfalls (from research)
 
@@ -131,9 +133,9 @@ Phase 5 [          ] 0%
 
 ## Session Continuity
 
-**Last session:** 2026-04-19T22:14:06Z
-**Stopped at:** 04-02 complete — agent.py with AsyncAnthropic tool-use loop, TOOL_SCHEMAS (10 entries), _TOOL_REGISTRY (10 entries), MAX_TURNS=10; anthropic>=0.96.0 added to pyproject.toml — commit 0336e70
-**Next action:** Execute Plan 04-03 (chat endpoint + UI — chat_router.py, chat/chat.html, main.py wiring)
+**Last session:** 2026-04-19T22:18:13Z
+**Stopped at:** 04-03 complete — chat_router.py (GET /chat + POST /chat/message), chat/chat.html (marked.js transcript), main.py + base.html wired; commits 520cd03, 9edde90
+**Next action:** Execute Plan 04-04 (Langfuse observability tracer)
 
 ---
 

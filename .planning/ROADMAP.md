@@ -89,7 +89,7 @@ Plans:
 Plans:
 - [x] 04-01-PLAN.md — Wave 1 foundations: guardrails.py (injection detection), history.py (per-user conversation store), tools.py (10 agent tool functions wrapping existing services)
 - [x] 04-02-PLAN.md — Wave 2 agent loop: agent.py (AsyncAnthropic tool-use loop, TOOL_SCHEMAS, MAX_TURNS=10, tool dispatch registry)
-- [ ] 04-03-PLAN.md — Wave 3 chat endpoint + UI: chat_router.py (GET /chat, POST /chat/message), chat/chat.html (AJAX transcript + marked.js), main.py + base.html wiring
+- [x] 04-03-PLAN.md — Wave 3 chat endpoint + UI: chat_router.py (GET /chat, POST /chat/message), chat/chat.html (AJAX transcript + marked.js), main.py + base.html wiring
 - [ ] 04-04-PLAN.md — Wave 4 tests: test_guardrails.py, test_agent_tools.py, test_chat_router.py (mocked agent, no real API calls)
 
 ### Phase 5: Evals & Demo Control
@@ -113,7 +113,7 @@ Plans:
 | 1. Domain Foundation | 4/4 | Complete | 2026-04-19 |
 | 2. Auth & Core Services | 3/3 | Complete | 2026-04-19 |
 | 3. Web UI & REST API | 6/6 | Complete | 2026-04-19 |
-| 4. Claude Agent | 2/4 | In Progress | - |
+| 4. Claude Agent | 3/4 | In Progress | - |
 | 5. Evals & Demo Control | 0/? | Not started | - |
 
 ---
