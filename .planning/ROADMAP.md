@@ -13,7 +13,7 @@
 - [x] **Phase 2: Auth & Core Services** - Shared JWT auth layer plus cart and order service logic verified by unit tests
 - [ ] **Phase 3: Web UI & REST API** - Mock adapters with failure injection, REST routers, and all Jinja2 web pages deliver the complete web shopping experience
 - [ ] **Phase 4: Claude Agent** - Tool registry, agentic loop, guardrails, and chat endpoint make every shopping and support flow available conversationally
-- [ ] **Phase 5: Evals & Demo Control** - Root-token live config, eval datasets for positive/negative/adversarial cases, and the complete testable demo harness
+- [x] **Phase 5: Evals & Demo Control** - Root-token live config, eval datasets for positive/negative/adversarial cases, and the complete testable demo harness
 
 ---
 
@@ -105,9 +105,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 05-01-PLAN.md — Root instruction parser: app/lib/guardrails/root_instruction.py (pure function, 5 regex patterns) + chat_router.py stub replaced with real parse+apply flow (MOCK-03)
-- [ ] 05-02-PLAN.md — Eval datasets: app/lib/evals/datasets/ subpackage with positive.py, negative.py, adversarial.py — 5 cases each in {input, expected_trajectory, expected_output, tags} format (TEST-01, TEST-02, TEST-03, TEST-04)
-- [ ] 05-03-PLAN.md — Smoke runner: tests/evals/test_smoke.py — 3 async tests (one per dataset), real API calls, skips when ANTHROPIC_API_KEY absent (TEST-04)
+- [x] 05-01-PLAN.md — Root instruction parser: app/lib/guardrails/root_instruction.py (pure function, 5 regex patterns) + chat_router.py stub replaced with real parse+apply flow (MOCK-03)
+- [x] 05-02-PLAN.md — Eval datasets: app/lib/evals/datasets/ subpackage with positive.py, negative.py, adversarial.py — 5 cases each in {input, expected_trajectory, expected_output, tags} format (TEST-01, TEST-02, TEST-03, TEST-04)
+- [x] 05-03-PLAN.md — Smoke runner: tests/evals/test_smoke.py — 3 async tests (one per dataset), real API calls, skips when ANTHROPIC_API_KEY absent (TEST-04)
 
 ---
 
@@ -119,7 +119,7 @@ Plans:
 | 2. Auth & Core Services | 3/3 | Complete | 2026-04-19 |
 | 3. Web UI & REST API | 6/6 | Complete | 2026-04-19 |
 | 4. Claude Agent | 4/4 | Complete | 2026-04-19 |
-| 5. Evals & Demo Control | 0/3 | Not started | - |
+| 5. Evals & Demo Control | 3/3 | Complete | 2026-04-19 |
 
 ---
 
