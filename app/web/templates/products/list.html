@@ -36,7 +36,9 @@
   {% for product in products %}
   <div class="col">
     <div class="card h-100">
-      <div class="bg-secondary" style="height:200px;"></div>
+      <img src="https://picsum.photos/seed/{{ product.id }}/400/200"
+           class="card-img-top" style="height:200px;object-fit:cover;"
+           alt="{{ product.name }}">
       <div class="card-body">
         <h5 class="card-title">{{ product.name }}</h5>
         <p class="card-text small text-muted">{{ product.category | capitalize }}</p>

@@ -10,6 +10,7 @@
 #   - Intermediate tool-use turns are NOT stored in history — only user message
 #     and final assistant reply are persisted (history.get_messages returns a copy)
 import logging
+import os
 from typing import Any
 
 from anthropic import AsyncAnthropic
@@ -21,7 +22,14 @@ from app.lib.auth.models import User
 logger = logging.getLogger(__name__)
 
 MAX_TURNS: int = 10
-_client = AsyncAnthropic()  # reads ANTHROPIC_API_KEY from env
+_client: AsyncAnthropic | None = None
+
+
+def _get_client() -> AsyncAnthropic:
+    global _client
+    if _client is None:
+        _client = AsyncAnthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
+    return _client
 
 # ---------------------------------------------------------------------------
 # Tool schemas (Anthropic tool definitions — passed as tools= parameter)
@@ -276,7 +284,7 @@ async def run(user_id: str, user: User, message: str) -> dict:
     response: Message | None = None
     for _ in range(MAX_TURNS):
         try:
-            response = await _client.messages.create(
+            response = await _get_client().messages.create(
                 model="claude-opus-4-5",
                 max_tokens=1024,
                 system=_build_system_prompt(user),
