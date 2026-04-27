@@ -7,6 +7,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from starlette.middleware.sessions import SessionMiddleware
 
+from app.lib.observability import flush_tracer, init_tracer
 from app.lib.seed.seed import seed
 
 
@@ -14,14 +15,17 @@ from app.lib.seed.seed import seed
 async def lifespan(app: FastAPI):
     """FastAPI lifespan context manager.
 
-    On startup, populate in-memory stores with demo data (15 products, 2 users,
-    3 orders) via seed(). If seed() raises, the app fails to start — fix the
-    seed data before deployment.
+    On startup, initialize the Langfuse tracer then populate in-memory stores
+    with demo data (15 products, 2 users, 3 orders) via seed(). If seed()
+    raises, the app fails to start — fix the seed data before deployment.
+
+    On shutdown, flush any buffered Langfuse spans so the last turn's traces
+    aren't lost when the process exits.
     """
-    # Startup: populate all in-memory stores.
+    init_tracer()
     seed()
     yield
-    # Shutdown: nothing to clean up for in-memory stores.
+    flush_tracer()
 
 
 app = FastAPI(title="ShoeStore AI Demo", lifespan=lifespan)

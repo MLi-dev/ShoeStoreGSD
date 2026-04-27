@@ -15,6 +15,7 @@ from typing import Any
 
 from anthropic import AsyncAnthropic
 from anthropic.types import Message
+from langfuse import get_client, observe, propagate_attributes
 
 from app.lib.agent import history, tools
 from app.lib.auth.models import User
@@ -256,6 +257,7 @@ async def _dispatch_tool(user_id: str, tool_use: Any) -> dict:
 # ---------------------------------------------------------------------------
 
 
+@observe(name="agent.run", capture_input=False)
 async def run(user_id: str, user: User, message: str) -> dict:
     """Run one user turn of the agent loop.
 
@@ -269,6 +271,11 @@ async def run(user_id: str, user: User, message: str) -> dict:
     persisted to history. Only the initial user message and the final assistant reply
     are stored via append_message.
 
+    Tracing: this function is the root span for one chat turn. Each Anthropic call
+    becomes a `claude.messages` generation child span; each tool dispatch becomes a
+    `tool.<name>` child span. The trace is tagged with user_id so traces can be
+    filtered per-user in Langfuse.
+
     Args:
         user_id: Authenticated user ID from JWT session (never from message content, D-15).
         user: Full User dataclass for system prompt injection (D-04).
@@ -278,56 +285,88 @@ async def run(user_id: str, user: User, message: str) -> dict:
         {"success": True, "data": {"reply": str}} on success.
         {"success": False, "code": str, "message": str, "retryable": bool} on error.
     """
-    await history.append_message(user_id, {"role": "user", "content": message})
-    messages = await history.get_messages(user_id)
+    langfuse = get_client()
 
-    response: Message | None = None
-    for _ in range(MAX_TURNS):
-        try:
-            response = await _get_client().messages.create(
-                model="claude-opus-4-5",
-                max_tokens=1024,
-                system=_build_system_prompt(user),
-                messages=messages,
-                tools=TOOL_SCHEMAS,
-            )
-        except Exception:
-            logger.exception("Anthropic API error in agent loop")
-            return {
-                "success": False,
-                "code": "AGENT_ERROR",
-                "message": "The assistant encountered an error. Please try again.",
-                "retryable": True,
-            }
+    # propagate_attributes binds user_id (and any future session_id/tags) onto
+    # every span created inside the with-block. Langfuse 4.x removed the old
+    # update_current_trace(user_id=...) entry point in favor of this OTel-native
+    # propagation API.
+    with propagate_attributes(user_id=user_id):
+        # @observe(capture_input=False) skips the implicit auto-capture so the
+        # User dataclass (which holds password_hash) never reaches Langfuse.
+        # Set just the safe message manually as the root span's input.
+        langfuse.update_current_span(input={"message": message})
 
-        if response.stop_reason == "end_turn":
-            reply = _extract_text(response)
-            await history.append_message(user_id, {"role": "assistant", "content": reply})
-            return {"success": True, "data": {"reply": reply}}
+        await history.append_message(user_id, {"role": "user", "content": message})
+        messages = await history.get_messages(user_id)
 
-        # stop_reason == "tool_use" — dispatch all tool calls in this response
-        tool_uses = [b for b in response.content if b.type == "tool_use"]
-        messages.append({"role": "assistant", "content": response.content})
-        tool_results = []
-        for tool_use in tool_uses:
+        response: Message | None = None
+        for _ in range(MAX_TURNS):
             try:
-                result = await _dispatch_tool(user_id=user_id, tool_use=tool_use)
-            except Exception as exc:
-                # _dispatch_tool should never raise, but guard here too (D-13)
-                logger.exception("Tool dispatch error for %s", tool_use.name)
-                result = {"error": str(exc)}
-            # D-13: ALWAYS append tool_result even on exception
-            tool_results.append({
-                "type": "tool_result",
-                "tool_use_id": tool_use.id,
-                "content": str(result),
-            })
-        messages.append({"role": "user", "content": tool_results})
+                with langfuse.start_as_current_observation(
+                    name="claude.messages",
+                    as_type="generation",
+                    model="claude-opus-4-5",
+                    input=messages,
+                    model_parameters={"max_tokens": 1024},
+                ) as generation:
+                    response = await _get_client().messages.create(
+                        model="claude-opus-4-5",
+                        max_tokens=1024,
+                        system=_build_system_prompt(user),
+                        messages=messages,
+                        tools=TOOL_SCHEMAS,
+                    )
+                    generation.update(
+                        output=response.content,
+                        usage_details={
+                            "input": response.usage.input_tokens,
+                            "output": response.usage.output_tokens,
+                        },
+                    )
+            except Exception:
+                logger.exception("Anthropic API error in agent loop")
+                return {
+                    "success": False,
+                    "code": "AGENT_ERROR",
+                    "message": "The assistant encountered an error. Please try again.",
+                    "retryable": True,
+                }
 
-    # MAX_TURNS hard cap reached — return last partial text response
-    last_reply = (
-        _extract_text(response)
-        if response
-        else "I reached the limit of my reasoning steps. Please try rephrasing."
-    )
-    return {"success": True, "data": {"reply": last_reply}}
+            if response.stop_reason == "end_turn":
+                reply = _extract_text(response)
+                await history.append_message(user_id, {"role": "assistant", "content": reply})
+                return {"success": True, "data": {"reply": reply}}
+
+            # stop_reason == "tool_use" — dispatch all tool calls in this response
+            tool_uses = [b for b in response.content if b.type == "tool_use"]
+            messages.append({"role": "assistant", "content": response.content})
+            tool_results = []
+            for tool_use in tool_uses:
+                with langfuse.start_as_current_observation(
+                    name=f"tool.{tool_use.name}",
+                    as_type="tool",
+                    input=tool_use.input,
+                ) as tool_span:
+                    try:
+                        result = await _dispatch_tool(user_id=user_id, tool_use=tool_use)
+                    except Exception as exc:
+                        # _dispatch_tool should never raise, but guard here too (D-13)
+                        logger.exception("Tool dispatch error for %s", tool_use.name)
+                        result = {"error": str(exc)}
+                    tool_span.update(output=result)
+                # D-13: ALWAYS append tool_result even on exception
+                tool_results.append({
+                    "type": "tool_result",
+                    "tool_use_id": tool_use.id,
+                    "content": str(result),
+                })
+            messages.append({"role": "user", "content": tool_results})
+
+        # MAX_TURNS hard cap reached — return last partial text response
+        last_reply = (
+            _extract_text(response)
+            if response
+            else "I reached the limit of my reasoning steps. Please try rephrasing."
+        )
+        return {"success": True, "data": {"reply": last_reply}}

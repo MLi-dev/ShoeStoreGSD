@@ -27,3 +27,11 @@ DEMO_MODE: bool = True
 JWT_SECRET: str = "dev-secret-change-in-prod"
 JWT_ALGORITHM: str = "HS256"
 JWT_EXPIRE_MINUTES: int = 30
+
+# Langfuse observability — env-driven. When LANGFUSE_PUBLIC_KEY is unset the
+# tracer becomes a no-op so local dev / tests run without external calls.
+import os  # noqa: E402
+
+LANGFUSE_PUBLIC_KEY: str | None = os.environ.get("LANGFUSE_PUBLIC_KEY")
+LANGFUSE_SECRET_KEY: str | None = os.environ.get("LANGFUSE_SECRET_KEY")
+LANGFUSE_HOST: str = os.environ.get("LANGFUSE_HOST", "https://cloud.langfuse.com")
